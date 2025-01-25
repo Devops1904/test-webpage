@@ -8,6 +8,9 @@
         async function fetchPodInfo() {
             try {
                 const response = await fetch('/api/podinfo'); // Replace with your API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 document.getElementById('pod-ip').textContent = data.ip || 'IP not available';
                 document.getElementById('pod-name').textContent = data.name;
