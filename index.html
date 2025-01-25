@@ -9,10 +9,16 @@
             try {
                 const response = await fetch('/api/podinfo'); // Replace with your API endpoint
                 const data = await response.json();
-                document.getElementById('pod-ip').textContent = data.ip;
+                document.getElementById('pod-ip').textContent = data.ip || 'IP not available';
                 document.getElementById('pod-name').textContent = data.name;
+                document.getElementById('pod-namespace').textContent = data.namespace;
+                document.getElementById('pod-node-name').textContent = data.nodeName;
             } catch (error) {
                 console.error('Error fetching pod info:', error);
+                document.getElementById('pod-ip').textContent = 'Error fetching IP';
+                document.getElementById('pod-name').textContent = 'Error fetching name';
+                document.getElementById('pod-namespace').textContent = 'Error fetching namespace';
+                document.getElementById('pod-node-name').textContent = 'Error fetching node name';
             }
         }
 

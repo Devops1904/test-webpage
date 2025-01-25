@@ -84,7 +84,9 @@ jobs:
 
     - name: Append namespace to namespaces.txt
       if: steps.check-namespace.outputs.namespace == ''
-      run: echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
+      run: |
+        echo "" >> aws-eks-test-cluster1/namespaces.txt
+        echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
 
     - name: Commit and push changes
       if: steps.check-namespace.outputs.namespace == ''
