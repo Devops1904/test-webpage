@@ -99,3 +99,4 @@ jobs:
 
     - name: Create Service
       run: kubectl apply -f service.yml -n ${{ steps.read-namespace.outputs.namespace }}
+      
