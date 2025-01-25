@@ -101,7 +101,7 @@ jobs:
 
     - name: Wait for namespace creation
       if: steps.check-namespace.outputs.namespace == ''
-      run: sleep 180
+      run: sleep 60
       
 
     - name: Create Pod
