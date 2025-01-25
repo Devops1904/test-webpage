@@ -80,6 +80,7 @@ jobs:
       with:
         repository: Devops1904/aws-eks-test-cluster1
         path: aws-eks-test-cluster1
+        token: ${{ secrets.MYGITHUB_TOKEN }}
 
     - name: Append namespace to namespaces.txt
       if: steps.check-namespace.outputs.namespace == ''
@@ -87,17 +88,16 @@ jobs:
 
     - name: Commit and push changes
       if: steps.check-namespace.outputs.namespace == ''
-      # env:
-      #   GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
       run: |
+        echo GITHUB_TOKEN
         cd aws-eks-test-cluster1
         git config --global user.name "santosh09"
         git config --global user.email "santosh09@gmail.com"
         git add namespaces.txt
         git commit -m "Add namespace ${{ steps.read-namespace.outputs.namespace }}"
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
-        git push origin main
-        # git push https://x-access-token:${GITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
 
     - name: Wait for namespace creation
       if: steps.check-namespace.outputs.namespace == ''
