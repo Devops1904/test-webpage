@@ -65,22 +65,21 @@ jobs:
           echo "Namespace exists"
         else
           echo "Namespace does not exist"
-          exit 1
         fi
 
     - name: Clone namespace repository
-      if: steps.check-namespace.outcome == 'failure'
+      if: steps.check-namespace.outputs.namespace == ''
       uses: actions/checkout@v2
       with:
         repository: Devops1904/aws-eks-test-cluster1
         path: aws-eks-test-cluster1
 
     - name: Append namespace to namespaces.txt
-      if: steps.check-namespace.outcome == 'failure'
+      if: steps.check-namespace.outputs.namespace == ''
       run: echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
 
     - name: Commit and push changes
-      if: steps.check-namespace.outcome == 'failure'
+      if: steps.check-namespace.outputs.namespace == ''
       run: |
         cd aws-eks-test-cluster1
         git config --global user.name "santosh09"
@@ -90,7 +89,7 @@ jobs:
         git push
 
     - name: Wait for namespace creation
-      if: steps.check-namespace.outcome == 'failure'
+      if: steps.check-namespace.outputs.namespace == ''
       run: sleep 180
 
     - name: Create Pod
