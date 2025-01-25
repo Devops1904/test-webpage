@@ -70,12 +70,14 @@ jobs:
       run: |
         if kubectl get namespace ${{ steps.read-namespace.outputs.namespace }}; then
           echo "Namespace exists"
+          echo "::set-output name=exists::true"
         else
           echo "Namespace does not exist"
+          echo "::set-output name=exists::false"
         fi
 
     - name: Clone namespace repository
-      if: steps.check-namespace.outputs.namespace == ''
+      if: steps.check-namespace.outputs.exists == 'false'
       uses: actions/checkout@v2
       with:
         repository: Devops1904/aws-eks-test-cluster1
@@ -83,13 +85,13 @@ jobs:
         token: ${{ secrets.MYGITHUB_TOKEN }}
 
     - name: Append namespace to namespaces.txt
-      if: steps.check-namespace.outputs.namespace == ''
+      if: steps.check-namespace.outputs.exists == 'false'
       run: |
         echo "" >> aws-eks-test-cluster1/namespaces.txt
         echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
 
     - name: Commit and push changes
-      if: steps.check-namespace.outputs.namespace == ''
+      if: steps.check-namespace.outputs.exists == 'false'
       env:
         GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
       run: |
@@ -102,10 +104,9 @@ jobs:
         git push https://x-access-token:${GITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
 
     - name: Wait for namespace creation
-      if: steps.check-namespace.outputs.namespace == ''
+      if: steps.check-namespace.outputs.exists == 'false'
       run: sleep 60
       
-
     - name: Create Pod
       run: kubectl apply -f pod-definition.yml -n ${{ steps.read-namespace.outputs.namespace }}
 
