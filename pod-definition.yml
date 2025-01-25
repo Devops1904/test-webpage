@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-webpage-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-webpage
+  template:
+    metadata:
+      labels:
+        app: test-webpage
+    spec:
+      containers:
+      - name: test-webpage
+        image: master9/test-webpage:latest
+        ports:
+        - containerPort: 80
