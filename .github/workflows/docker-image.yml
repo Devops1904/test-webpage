@@ -56,3 +56,6 @@ jobs:
 
     - name: Create Pod
       run: kubectl apply -f pod-definition.yml
+    
+      - name: Create Service
+      run: kubectl apply -f service.yml
