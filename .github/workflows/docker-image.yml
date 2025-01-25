@@ -107,6 +107,9 @@ jobs:
       if: steps.check-namespace.outputs.exists == 'false'
       run: sleep 60
       
+    - name: Delete existing deployment
+      run: kubectl delete deployment test-webpage-deployment -n ${{ steps.read-namespace.outputs.namespace }}
+
     - name: Create Pod
       run: kubectl apply -f pod-definition.yml -n ${{ steps.read-namespace.outputs.namespace }}
 
