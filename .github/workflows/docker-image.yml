@@ -88,7 +88,7 @@ jobs:
         git config --global user.email "santosh09@gmail.com"
         git add namespaces.txt
         git commit -m "Add namespace ${{ steps.read-namespace.outputs.namespace }}"
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
+        git push https://x-access-token:${MYGITHUB_TOKEN}@github.com/Devops1904/aws-eks-test-cluster1.git
 
     - name: Wait for namespace creation
       if: steps.check-namespace.outputs.namespace == ''
@@ -99,4 +99,4 @@ jobs:
 
     - name: Create Service
       run: kubectl apply -f service.yml -n ${{ steps.read-namespace.outputs.namespace }}
-      
+
