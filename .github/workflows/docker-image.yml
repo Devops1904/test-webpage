@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  
 
 env:
   GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
@@ -23,7 +22,7 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
- 
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
       with:
@@ -86,12 +85,7 @@ jobs:
 
     - name: Append namespace to namespaces.txt
       if: steps.check-namespace.outputs.exists == 'false'
-      run: |
-        if [ -z "$(tail -c 1 aws-eks-test-cluster1/namespaces.txt)" ]; then
-          echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
-        else
-          echo "" >> aws-eks-test-cluster1/namespaces.txt
-          echo ${{ steps.read-namespace.outputs.namespace }} >> aws-eks-test-cluster1/namespaces.txt
+      run: python3 scripts/append_namespace.py ${{ steps.read-namespace.outputs.namespace }}
 
     - name: Commit and push changes
       if: steps.check-namespace.outputs.exists == 'false'
@@ -109,7 +103,7 @@ jobs:
     - name: Wait for namespace creation
       if: steps.check-namespace.outputs.exists == 'false'
       run: sleep 60
-      
+
     - name: Delete existing deployment
       run: kubectl delete deployment test-webpage-deployment -n ${{ steps.read-namespace.outputs.namespace }}
 
