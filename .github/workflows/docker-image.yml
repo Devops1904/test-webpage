@@ -104,7 +104,19 @@ jobs:
       if: steps.check-namespace.outputs.exists == 'false'
       run: sleep 60
 
+    - name: Check if deployment exists
+      id: check-deployment
+      run: |
+        if kubectl get deployment test-webpage-deployment -n ${{ steps.read-namespace.outputs.namespace }}; then
+          echo "Deployment exists"
+          echo "::set-output name=exists::true"
+        else
+          echo "Deployment does not exist"
+          echo "::set-output name=exists::false"
+        fi
+
     - name: Delete existing deployment
+      if: steps.check-deployment.outputs.exists == 'true'
       run: kubectl delete deployment test-webpage-deployment -n ${{ steps.read-namespace.outputs.namespace }}
 
     - name: Create Pod
